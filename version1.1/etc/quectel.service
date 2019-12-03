@@ -1,0 +1,10 @@
+[Unit]
+Description=Establish cellular connectivity
+After=network.target
+
+[Service]
+ExecStart=/bin/sh /opt/avnet-iot/services/quectel-service.sh
+
+[Install]
+WantedBy=default.target
+

@@ -1,0 +1,6 @@
+#!/bin/bash
+sudo systemctl stop ledservice
+sudo chmod 666 /sys/class/leds/smartedge_led/brightness
+echo 36 |sudo tee >/sys/class/leds/smartedge_led/brightness
+#sudo chmod 666 /sys/class/leds/smartedge_led_duty/brightness
+#echo 128 |sudo tee >/sys/class/leds/smartedge_led_duty/brightness

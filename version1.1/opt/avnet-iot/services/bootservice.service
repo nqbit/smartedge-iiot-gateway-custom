@@ -1,0 +1,9 @@
+[Unit]
+Description=Runs smartedge-iiot-gateway in factory default mode.
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/sudo /opt/avnet-iot/iotservices/boot 
+
+[Install]
+WantedBy=default.target

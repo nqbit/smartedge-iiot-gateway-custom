@@ -1,0 +1,4 @@
+sudo systemctl stop iotconnectservice
+cd /opt/avnet-iot/IoTConnect/sample
+sudo -E python example.py
+

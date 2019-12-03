@@ -1,0 +1,6 @@
+#/!bin/sh
+zero=0
+
+# start client mode
+sudo echo "SKIP" >/tmp/ip_address
+sudo ./wifi_client

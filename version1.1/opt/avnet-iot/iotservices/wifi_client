@@ -1,0 +1,19 @@
+#/!bin/sh
+#stop AP mode
+sudo cp /etc/dhcpcd.conf.default /etc/dhcpcd.conf
+sudo cp /etc/default/hostapd.default /etc/default/hostapd
+sudo cp /etc/dnsmasq.conf.default /etc/dnsmasq.conf
+sudo systemctl daemon-reload
+sudo systemctl disable dnsmasq
+sudo systemctl disable hostapd
+sudo systemctl stop dnsmasq
+sudo systemctl stop hostapd
+sudo systemctl enable wpa_supplicant.service
+sudo systemctl start wpa_supplicant.service
+sudo systemctl stop dhcpcd
+sudo systemctl start dhcpcd
+#start Station/client mode
+sudo systemctl enable iotconnectservice
+sudo systemctl start iotconnectservice
+sudo systemctl disable restservice
+sudo systemctl stop restservice

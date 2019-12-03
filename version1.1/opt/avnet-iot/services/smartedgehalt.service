@@ -1,0 +1,12 @@
+[Unit]
+Description=Runs smartedge-iiot-gateway Top LED.
+Before=shutdown.target
+
+[Service]
+Type=oneshot 
+
+ExecStart=/bin/true
+ExecStop=/usr/bin/sudo /opt/avnet-iot/iotservices/halt
+
+[Install]
+WantedBy=default.target

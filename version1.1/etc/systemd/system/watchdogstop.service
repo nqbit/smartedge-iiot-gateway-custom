@@ -1,0 +1,10 @@
+[Unit]
+Description=Controls ATTINY hardware watchdog
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/sudo /opt/avnet-iot/iotservices/stopwd
+ExecStop=/bin/true
+
+[Install]
+WantedBy=default.target

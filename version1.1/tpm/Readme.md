@@ -1,0 +1,1 @@
+Run tpm2_setup.sh to install and compile tpm tools if wish to make sure your tpm2 tools are up to date.

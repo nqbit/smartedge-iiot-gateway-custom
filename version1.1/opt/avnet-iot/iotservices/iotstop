@@ -1,0 +1,9 @@
+#!/bin/bash
+sudo systemctl stop iotconnectservice
+sudo systemctl stop ledservice
+sudo chmod 666 /sys/class/leds/smartedge_led/brightness
+echo 0 |sudo tee >/sys/class/leds/smartedge_led/brightness
+sudo chmod 666 /sys/class/leds/smartedge_led_duty/brightness
+echo 0 |sudo tee >/sys/class/leds/smartedge_led_duty/brightness
+
+

@@ -1,0 +1,24 @@
+/var/log/syslog
+/var/log/auth.log
+/var/log/boot.log
+/var/log/kern.log
+/var/log/messages
+/var/log/user.log
+/var/log/daemon.log
+/var/log/iot.log
+/var/log/button.log
+/var/log/led.log
+/var/log/rest.log
+{
+	size 50k
+        rotate 7 
+	missingok
+	notifempty
+	copytruncate
+        delaycompress
+        compress
+	postrotate
+		invoke-rc.d rsyslog rotate > /dev/null
+		invoke-rc.d rsyslog restart > /dev/null
+	endscript
+}

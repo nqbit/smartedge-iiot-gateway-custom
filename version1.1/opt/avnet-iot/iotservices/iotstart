@@ -1,0 +1,3 @@
+sudo systemctl stop iotconnectservice
+sudo systemctl start iotconnectservice
+

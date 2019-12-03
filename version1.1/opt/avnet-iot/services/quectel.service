@@ -1,0 +1,9 @@
+[Unit]
+Description=Establishes cellular connectivity
+
+[Service]
+Type=forking
+ExecStart=/usr/bin/sudo /opt/avnet-iot/services/quectel-service.sh &
+
+[Install]
+WantedBy=default.target

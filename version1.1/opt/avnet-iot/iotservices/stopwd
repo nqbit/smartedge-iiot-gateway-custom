@@ -1,0 +1,4 @@
+#!/bin/bash
+sleep 3 
+echo V | /usr/bin/sudo tee /dev/watchdog1
+sudo systemctl enable smartedgehalt

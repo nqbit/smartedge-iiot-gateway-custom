@@ -1,0 +1,38 @@
+#!/bin/bash
+echo 210 >/sys/class/gpio/export
+echo 211 >/sys/class/gpio/export
+echo 213 >/sys/class/gpio/export
+sudo chmod 666 /sys/class/gpio/gpio210/direction
+sudo chmod 666 /sys/class/gpio/gpio211/direction
+sudo chmod 666 /sys/class/gpio/gpio213/direction
+echo out >/sys/class/gpio/gpio210/direction
+echo out >/sys/class/gpio/gpio211/direction
+echo out >/sys/class/gpio/gpio213/direction
+sudo chmod 666 /sys/class/gpio/gpio210/value
+sudo chmod 666 /sys/class/gpio/gpio211/value
+sudo chmod 666 /sys/class/gpio/gpio213/value
+echo 0 >/sys/class/gpio/gpio210/value
+echo 0 >/sys/class/gpio/gpio211/value
+echo 0 >/sys/class/gpio/gpio213/value
+sleep .1
+echo 1 >/sys/class/gpio/gpio210/value
+echo 1 >/sys/class/gpio/gpio211/value
+echo 1 >/sys/class/gpio/gpio213/value
+sleep .1
+echo 0 >/sys/class/gpio/gpio211/value
+sudo systemctl stop ledservice
+sudo systemctl stop smartedgehalt
+
+sudo chmod 666 /sys/class/leds/smartedge_led/brightness
+echo 20 |sudo tee >/sys/class/leds/smartedge_led/brightness
+sudo chmod 666 /sys/class/leds/smartedge_led_duty/brightness
+echo 128 |sudo tee >/sys/class/leds/smartedge_led_duty/brightness
+
+sleep .2
+
+sudo rmmod attiny_wdt
+sudo modprobe attiny_wdt
+sudo ifconfig eth0 down
+sudo ifconfig eth1 down
+sudo ifconfig wlan0 down
+sudo halt

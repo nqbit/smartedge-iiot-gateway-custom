@@ -1,0 +1,5 @@
+#!/bin/bash
+sudo mkdir /temp
+sudo touch /temp/install.log
+sudo chmod 777 /temp/install.log
+sudo ./install.sh >/temp/install.log 2>&1

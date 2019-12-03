@@ -1,0 +1,17 @@
+#!/bin/bash
+cd /opt/avnet-iot/iotservices
+sudo /opt/avnet-iot/iotservices/checkpishrink
+# check for pishrink running and exit if so.
+if [[ $? == 0 ]]; then
+    echo "Starting Smartedge-iiot-gateway BOOT service" 
+else
+    echo -e "\e[31mPiShrink Running delaying BOOT service"
+    exit 1
+fi
+
+/usr/bin/sudo systemctl disable wpa_supplicant.service
+/usr/bin/sudo systemctl stop wpa_supplicant.service
+sudo rm /etc/wpa_supplicant/wpa_supplicant.conf
+/usr/bin/sudo /opt/avnet-iot/iotservices/iotsetup
+sudo systemctl disable bootservice
+

@@ -1,0 +1,16 @@
+sudo systemctl disable wpa_supplicant.service
+sudo systemctl stop wpa_supplicant.service
+sudo rm /etc/wpa_supplicant/wpa_supplicant.conf
+sudo ifconfig wlan0 down
+sudo rm /tmp/ip_address
+sudo cp /etc/default/hostapd.ap /etc/default/hostapd
+sudo cp /etc/dhcpcd.conf.ap /etc/dhcpcd.conf
+sudo cp /etc/dnsmasq.conf.ap /etc/dnsmasq.conf
+sudo ifconfig wlan0 up
+sudo systemctl restart dhcpcd
+sudo systemctl restart dnsmasq
+sudo systemctl restart hostapd
+sudo systemctl enable ledservice
+sudo systemctl start ledservice
+sudo systemctl enable restservice
+sudo systemctl start restservice

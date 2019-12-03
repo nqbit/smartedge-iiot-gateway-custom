@@ -1,0 +1,42 @@
+#/!bin/sh
+zero=0
+#stop AP mode
+sudo cp /etc/dhcpcd.conf.default /etc/dhcpcd.conf
+sudo cp /etc/default/hostapd.default /etc/default/hostapd
+sudo cp /etc/dnsmasq.conf.default /etc/dnsmasq.conf
+sudo systemctl daemon-reload
+sudo systemctl disable dnsmasq
+sudo systemctl disable hostapd
+sudo systemctl stop dnsmasq
+sudo systemctl stop hostapd
+sudo systemctl enable wpa_supplicant.service
+sudo systemctl start wpa_supplicant.service
+sudo systemctl stop dhcpcd
+sudo systemctl start dhcpcd
+# start client mode
+sleep 10
+sudo ifconfig wlan0 | grep inet | sudo tee >/tmp/ip_address
+size=`stat -c%s /tmp/ip_address`
+if [ $size != $zero ]
+then
+    sudo ./wifi_client &
+else
+#no client IP go back to AP mode
+    sleep 10 
+    sudo systemctl disable wpa_supplicant.service
+    sudo systemctl stop wpa_supplicant.service
+    sudo rm /etc/wpa_supplicant/wpa_supplicant.conf
+    sudo cp /etc/dhcpcd.conf.ap /etc/dhcpcd.conf
+    sudo cp /etc/default/hostapd.ap /etc/default/hostapd
+    sudo cp /etc/dnsmasq.conf.ap /etc/dnsmasq.conf
+    sudo systemctl daemon-reload
+    sudo systemctl disable hostapd.service
+    sudo systemctl disable dnsmasq.service
+    sudo systemctl disable dhcpcd.service
+    sudo systemctl enable dhcpcd.service
+    sudo systemctl enable dnsmasq.service
+    sudo systemctl enable hostapd.service
+    sudo systemctl start hostapd.service
+    sudo systemctl start dnsmasq.service
+    sudo systemctl start dhcpcd.service 
+fi

@@ -1,0 +1,71 @@
+#!/bin/bash
+sudo chmod 700 /opt/avnet-iot/iotservices/cleanup
+sudo chmod 700 /opt/avnet-iot/iotservices/reboot
+
+sudo rm /opt/avnet-iot/IoTConnect/sample/install*
+sudo rm -R /opt/avnet-iot/IoTConnect/sample/updates
+sudo rm -R /home/avnet/*
+sudo history -c
+sudo rm /home/avnet/.bash_history
+sudo rm /root/.bash_history
+sudo rm /etc/ssh/ssh_host_*
+sudo rm /etc/*.txt
+sudo rm /etc/machine-id
+sudo rm -R /var/cache/apt/archives/* 
+sudo rm -R /etc/apn.conf
+sudo rm /etc/wpa_supplicant/wpa_supplicant.conf*
+sudo rm /etc/wpa_supplicant/wpa_supplicant.backup
+sudo rm -R /var/log/*
+sudo find / -name '*~' -exec sudo rm -rf {} \;
+sudo find / -name '*.swp' -exec sudo rm -rf {} \;
+sudo find / -name '#*#' -exec sudo rm -rf {} \;
+sudo touch /etc/machine-id
+sudo apt-mark hold raspberrypi-bootloader
+sudo apt-mark hold raspberrypi-kernel
+sudo apt-mark hold raspberrypi-sys-mods
+sudo service ssh stop
+sudo systemctl disable ssh
+sudo systemctl enable regenerate_ssh_host_keys
+sudo rm /opt/avnet-iot/IoTConnect/ImageDate.txt
+sudo touch /opt/avnet-iot/IoTConnect/ImageDate.txt
+sudo chmod 777 /opt/avnet-iot/IoTConnect/ImageDate.txt
+sudo date >/opt/avnet-iot/IoTConnect/ImageDate.txt
+sudo chmod 555 /opt/avnet-iot/IoTConnect/ImageDate.txt
+
+sudo rm /tmp/ip_address
+sudo rm /tmp/iotconnect.txt
+sudo cp /opt/avnet-iot/IoTConnect/sample/IoTConnectSDK.conf.default /opt/avnet-iot/IoTConnect/sample/IoTConnectSDK.conf
+sudo cp /etc/default/hostapd.ap /etc/default/hostapd
+sudo cp /etc/dhcpcd.conf.ap /etc/dhcpcd.conf
+sudo cp /etc/dnsmasq.conf.ap /etc/dnsmasq.conf
+sudo systemctl daemon-reload
+sudo systemctl disable iotconnectservice
+sudo systemctl stop iotconnectservice
+sudo systemctl enable restservice
+sudo systemctl enable hostapd.service
+sudo systemctl enable dnsmasq.service
+sudo systemctl start hostapd.service
+sudo systemctl start dnsmasq.service
+sudo systemctl stop bootservice
+sudo rm /etc/systemd/system/attinyupdate.service
+sudo ln -s /opt/avnet-iot/services/attinyupdate.service /etc/systemd/system/attinyupdate.service
+sudo rm /etc/systemd/system/bootservice.service
+sudo ln -s /opt/avnet-iot/services/bootservice.service /etc/systemd/system/bootservice.service
+sudo systemctl enable attinyupdate.service
+sudo systemctl enable bootservice.service
+sudo rm /sbin/reboot
+sudo ln -s /bin/systemctl /sbin/reboot
+history -c
+#read -p "Press key to continue" key
+
+if [ -d /home/avnet ]; then
+    echo "Already exists"
+else
+    sudo deluser avnet
+    sudo useradd -m -d /home/avnet -g avnet -G root,crontab,adm,tty,dialout,sudo,ssh,iotedge,tss,gpio,i2c -s /bin/bash avnet  
+    cat /opt/avnet-iot/iotservices/default.txt | sudo chpasswd 
+fi
+sudo /opt/avnet-iot/iotservices/switch_only
+
+
+

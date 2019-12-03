@@ -1,0 +1,3 @@
+#!/bin/bash
+sudo /opt/avnet-iot/iotservices/iotstop
+sudo /opt/avnet-iot/iotservices/iotstart

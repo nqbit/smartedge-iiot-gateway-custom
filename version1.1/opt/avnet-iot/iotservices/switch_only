@@ -1,0 +1,28 @@
+sudo systemctl disable wpa_supplicant.service
+sudo systemctl stop wpa_supplicant.service
+sudo rm /etc/wpa_supplicant/wpa_supplicant.conf
+sudo rm /tmp/ip_address
+sudo rm /tmp/iotconnect.txt
+sudo cp /opt/avnet-iot/IoTConnect/sample/IoTConnectSDK.conf.default /opt/avnet-iot/IoTConnect/sample/IoTConnectSDK.conf
+sudo cp /etc/default/hostapd.ap /etc/default/hostapd
+sudo cp /etc/dhcpcd.conf.ap /etc/dhcpcd.conf
+sudo cp /etc/dnsmasq.conf.ap /etc/dnsmasq.conf
+sudo systemctl daemon-reload
+sudo systemctl enable hostapd
+sudo systemctl enable dnsmasq
+sudo systemctl restart dnsmasq
+sudo systemctl restart hostapd
+sudo systemctl restart dhcpcd
+
+sudo systemctl enable restservice
+sudo systemctl start restservice
+history -c
+if [ -d /home/avnet ]; then
+    echo "Already exists"
+else
+    sudo deluser avnet
+    sudo useradd -m -d /home/avnet -g avnet -G root,crontab,adm,tty,dialout,sudo,ssh,iotedge,tss,gpio,i2c -s /bin/bash avnet  
+    cat /opt/avnet-iot/iotservices/default.txt | sudo chpasswd 
+fi
+sudo systemctl disable iotconnectservice
+sudo /opt/avnet-iot/iotservices/reboot
