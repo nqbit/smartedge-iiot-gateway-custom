@@ -34,6 +34,7 @@ OmegaSSLock = threading.Lock()
 SendDataLock = threading.Lock()
 
 import re
+import subprocess
 from subprocess import PIPE, Popen
 global ThreadCount
 ThreadCount = 0
@@ -2070,14 +2071,17 @@ def SendDataToCloud(name):
     count = int(my_config_parser_dict["CloudSystemControl"]["sendtocloudrate"])
     try:
         while(True):
-            if (green == 1):
-                os.system('echo 0 >/sys/class/leds/red/brightness')
-                os.system('echo 1 >/sys/class/leds/green/brightness')
-                green = 0
+            ledprocess = subprocess.check_output(['systemctl', 'is-active', 'ledservice.service'])
+            if ledprocess == "active":
             else:
-                os.system('echo 0 >/sys/class/leds/red/brightness')
-                os.system('echo 0 >/sys/class/leds/green/brightness')
-                green = 1
+                if (green == 1):
+                    os.system('echo 0 >/sys/class/leds/red/brightness')
+                    os.system('echo 1 >/sys/class/leds/green/brightness')
+                    green = 0
+                else:
+                    os.system('echo 0 >/sys/class/leds/red/brightness')
+                    os.system('echo 0 >/sys/class/leds/green/brightness')
+                    green = 1
             time.sleep(float(1))
             #gc.collect()
             count = count - 1

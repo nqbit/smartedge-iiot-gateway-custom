@@ -10,7 +10,6 @@ sudo ifconfig wlan0 up
 sudo systemctl restart dhcpcd
 sudo systemctl restart dnsmasq
 sudo systemctl restart hostapd
-sudo systemctl enable ledservice
-sudo systemctl start ledservice
 sudo systemctl enable restservice
 sudo systemctl start restservice
+sudo systemctl start ledservice
