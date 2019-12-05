@@ -75,28 +75,24 @@ def app_json(func):
 def wificlient_ssid_psk():
     try:
         rsp = 1
-        data = request.body.readline()
+        data = request.body.read()
         # parse ssid/psk and do settings.
-        data = data.replace("{"," ")
-        data = data.replace("}", " ")
-        data = data.replace(":", "\n")
-        data = data.replace("\"", " ") 
-        data = data.strip(" ")
-	data = str(data)
-        data = data.splitlines()
-        ssid = str(data[0])
-        psk = str(data[1])
-        psk = psk.strip()
-        ssid = ssid.strip()
+        data = json.loads(data)
+        for key, value in data.items():
+            print(key)
+            print(value)
+            ssid = key 
+            psk = value
+        
         f = open("/etc/wpa_supplicant/wpa_supplicant.conf","w")
         f.write("ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev\n")
         f.write("country=US\n")
         f.write("network={\n      key_mgmt=WPA-PSK")
         
-        pskline = ("\npsk=" + "\"" + str(psk) +"\"\n")
+        pskline = ("\npsk=" + "\"" + psk +"\"\n")
         
         f.write(pskline)
-        ssidline = ("\nssid=" + "\"" + str(ssid) + "\"\n")
+        ssidline = ("\nssid=" + "\"" + ssid + "\"\n")
         f.write(ssidline)
         f.write("\n }\n")
         f.close()
