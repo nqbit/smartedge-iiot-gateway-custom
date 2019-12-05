@@ -32,7 +32,7 @@ def check_switch_short():
 
     try:
     	while 1:
-            print(cmdline("sudo cat /dev/button"))
+            print(cmdline("cat /dev/button"))
             SwitchShort = 1
             print(SwitchLong)
 	    print(SwitchFactory)
@@ -51,7 +51,7 @@ def check_switch_long():
 
     try:
         while 1:
-            print(cmdline("sudo cat /dev/reset"))
+            print(cmdline("cat /dev/reset"))
             print(SwitchLong)
             print(SwitchFactory)
             SwitchLong = 1
@@ -67,7 +67,7 @@ def check_switch_factory():
 
     try:
         while 1:
-            print(cmdline("sudo cat /dev/resetfactory"))
+            print(cmdline("cat /dev/resetfactory"))
             SwitchFactory = 1
             print("WARNING!!! LongPress Resetting to Factory State WARNING!!!")
             print(cmdline("/usr/bin/sudo /opt/avnet-iot/iotservices/switch_only"))
