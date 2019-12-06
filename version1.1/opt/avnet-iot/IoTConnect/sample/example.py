@@ -1,4 +1,4 @@
-
+import traceback
 import sys
 import os.path
 import os
@@ -157,6 +157,8 @@ def service_call(method, url, header=None, body=None):
         conn.close()
         return data
     except Exception as ex:
+        exc_type, exc_value, exc_traceback = sys.exc_info()
+        traceback.print_tb(exc_traceback)
         print(ex)
         sys.stdout.flush()
         sys.stderr.flush()
@@ -962,7 +964,7 @@ def ProcessOmegaZWSensorTask(name):
         lastvalue = 0
         value = -1
         pushdataalways = int(my_sensor_dict[name]["pushdataalways"])
-        myprint("ProcessingZW")
+        #myprint("ProcessingZW")
         my_sensor_dict[name]["value"] = lastvalue
 	while 1:
             zwip = my_sensor_dict[name]["OmegaDev"]
@@ -980,7 +982,6 @@ def ProcessOmegaZWSensorTask(name):
                     myprint("Error reading value exiting task " +str(name))
                     sys.exit(1)
                 else:
-                    myprint(value)
                     my_sensor_dict[name]["value"] = value
                     data = {}
                     data[my_sensor_dict[name]["name"]] = value
@@ -1027,12 +1028,18 @@ def ProcessOmegaZWSensorTask(name):
             time.sleep(float(reportpolltime)) 
             
     except Exception as ex:
+        exc_type, exc_value, exc_traceback = sys.exc_info()
+        traceback.print_tb(exc_traceback)
         myprint(ex.message)
         myprint("Omega ZW-REC ExitTask")
     except KeyboardInterrupt as ex:
+        exc_type, exc_value, exc_traceback = sys.exc_info()
+        traceback.print_tb(exc_traceback)
         myprint(ex.message)
         myprint("Omege ZW-REC ExittaskKbd")
     except SystemExit as ex:
+        exc_type, exc_value, exc_traceback = sys.exc_info()
+        traceback.print_tb(exc_traceback)
         myprint("Omega ZW-REC SystemExit")
 
 
@@ -1350,16 +1357,22 @@ def ProcessOmegaSensorTask(name):
     except Exception as ex:
         if (SendDataLock.locked() == True):
            SendDataLock.release()
+        exc_type, exc_value, exc_traceback = sys.exc_info()
+        traceback.print_tb(exc_traceback)
         myprint(ex.message)
         myprint("Omega ExitTask")
     except KeyboardInterrupt as ex:
         if (SendDataLock.locked() == True):
            SendDataLock.release()
+        exc_type, exc_value, exc_traceback = sys.exc_info()
+        traceback.print_tb(exc_traceback)
         myprint(ex.message)
         myprint("Omega ExittaskKbd")
     except SystemExit as ex:
         if (SendDataLock.locked() == True):
            SendDataLock.release()
+        exc_type, exc_value, exc_traceback = sys.exc_info()
+        traceback.print_tb(exc_traceback)
         myprint("Omega SystemExit")
 
     
@@ -1972,8 +1985,12 @@ def ProcessRules(name):
                     else:
                         myprint("Unknown Condition" + condition)
     except Exception as ex:
+        exc_type, exc_value, exc_traceback = sys.exc_info()
+        traceback.print_tb(exc_traceback)
         myprint(ex.message)
     except KeyboardInterrupt:
+        exc_type, exc_value, exc_traceback = sys.exc_info()
+        traceback.print_tb(exc_traceback)
         myprint(ex.message)
 
 
@@ -2050,11 +2067,15 @@ def ProcessSensorTask(name):
     except Exception as ex:
         if (SendDataLock.locked() == True):
            SendDataLock.release()
+        exc_type, exc_value, exc_traceback = sys.exc_info()
+        traceback.print_tb(exc_traceback)
         myprint(ex.message)
         myprint("Exception in ProcessSensorTask")
     except KeyboardInterrupt:
         if (SendDataLock.locked() == True):
            SendDataLock.release()
+        exc_type, exc_value, exc_traceback = sys.exc_info()
+        traceback.print_tb(exc_traceback)
         myprint(ex.message)
         myprint("Exception in ProcessSensorTask")
 
@@ -2071,8 +2092,8 @@ def SendDataToCloud(name):
     count = int(my_config_parser_dict["CloudSystemControl"]["sendtocloudrate"])
     try:
         while(True):
-            ledprocess = subprocess.check_output(['systemctl', 'is-active', 'ledservice.service'])
-            if (ledprocess != "active"):
+            ledprocess = subprocess.call(['systemctl', 'is-active', 'ledservice.service'])
+            if (ledprocess == 3 ):
                 if (green == 1):
                     os.system('echo 0 >/sys/class/leds/red/brightness')
                     os.system('echo 1 >/sys/class/leds/green/brightness')
@@ -2103,8 +2124,12 @@ def SendDataToCloud(name):
                     sdk.SendData(SendDataArray)
                     SendDataArray = []
                     SendDataLock.release()
-    except:
-        SendDataLock.release()
+    except Exception as ex:
+        if(SendDataLock.locked() == True):
+           SendDataLock.release()
+        exc_type, exc_value, exc_traceback = sys.exc_info()
+        traceback.print_tb(exc_traceback)
+        myprint(ex)
         myprint("SendDataToCloud Exit")
         
 def main(argv):
@@ -2259,6 +2284,8 @@ def main(argv):
                     while 1:
                        time.sleep(60)
     except Exception as ex:
+        exc_type, exc_value, exc_traceback = sys.exc_info()
+        traceback.print_tb(exc_traceback)
         myprint("Exiting in 60 seconds" + str(ex))
     time.sleep(60)
     myprint("Quitting")           
