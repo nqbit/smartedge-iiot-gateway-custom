@@ -15,8 +15,9 @@ else
     echo -e "\e[31mPiShrink Running delaying ATTINY UPDATE service"
     exit 1
 fi
-ANSWERHW=$(dmesg | grep -o 'ATTINY HW REV [0-9]*' | grep -o '[0-9]*')
-ANSWERFW=$(dmesg | grep -o 'ATTINY FW REV [0-9]*' | grep -o '[0-9]*')
+# Get last version reported 
+ANSWERHW=$(dmesg | grep -o 'ATTINY HW REV [0-9]*' | grep -o '[0-9]*'| tr -d '\n' | tail -c 1)
+ANSWERFW=$(dmesg | grep -o 'ATTINY FW REV [0-9]*' | grep -o '[0-9]*' | tr -d '\n' | tail -c 1)
 echo $ANSWERFW
 echo $ANSWERHW
 
@@ -47,9 +48,8 @@ Attiny_update_firmware() {
 	echo "waiting for watchdog1"
     done
     
-    # Stop it as modprobe will re-enable it.
-    sudo chmod 666 /dev/watchdog1
-    echo V >/dev/watchdog1
+    # Stop it as modprobe re-enabled it.
+    echo V | sudo tee /dev/watchdog1
     sudo systemctl enable buttonservice
     sudo systemctl enable ledservice
     sudo systemctl start buttonservice

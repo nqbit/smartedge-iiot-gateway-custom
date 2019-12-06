@@ -85,8 +85,9 @@ if __name__ == '__main__':
     t1.start()
     t2 = threading.Thread(name='child procs', target=check_switch_factory)
     t2.start()
-    cmdline('sudo chmod 666 /dev/watchdog1')
-    cmdline('echo V | sudo tee >/dev/watchdog1')
+    while not os.path.exists("/dev/watchdog1"):
+        time.sleep(1)
+    cmdline('echo V | sudo tee /dev/watchdog1')
     while 1:
         time.sleep(60*60)
     #run(host='0.0.0.0', port=8080)

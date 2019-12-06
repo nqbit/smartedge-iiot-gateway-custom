@@ -1,4 +1,8 @@
 #!/bin/bash
-sleep 3 
+while [ -f "/dev/watchdog1" ];
+do
+    sleep 2
+    echo "waiting for watchdog1"
+done 
 echo V | /usr/bin/sudo tee /dev/watchdog1
 sudo systemctl enable smartedgehalt
