@@ -2161,19 +2161,8 @@ def main(argv):
         #myprint(my_config_parser_dict)
         
         config.read('/opt/avnet-iot/IoTConnect/sample/IoTConnectSDK.conf')
-        #myprint(my_config_parser_dict)
-        # 
-        # overlay current conf (usefull for upgrading previous)
-        #
-        for s in config.sections():
-            for i in config.items(s):
-                if my_config_parser_dict[s] in config.keys():
-                    myprint("Section add")
-                #else:
-                #    myprint("Section exists")
-                    
-                                    
-                my_config_parser_dict[s][i[0]] = i[1] 
+        my_config_parser_current_dict = {s:dict(config.items(s)) for s in config.sections()}
+        my_config_parser_dict.update(my_config_parser_current_dict)
         
         scopeId = my_config_parser_dict["CloudSDKConfiguration"]["scopeid"]
         env = my_config_parser_dict["CloudSDKConfiguration"]["env"]
