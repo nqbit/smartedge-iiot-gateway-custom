@@ -8,11 +8,6 @@ else
     echo -e "\e[31mPiShrink Running delaying LED service"
     exit 1
 fi
-/usr/bin/sudo /opt/avnet-iot/iotservices/stopwd
-
-sleep 1 
-while true; do
-    /usr/bin/sudo -E python -u /opt/avnet-iot/iotservices/led.py >/dev/null 2>&1
-    sleep 60
-    echo "Led python restart" >>/var/log/led.log
-done & 
+sudo /opt/avnet-iot/iotservices/stopwd
+sudo -E python -u /opt/avnet-iot/iotservices/led.py >/dev/null 2>&1
+echo "Led python restart" >>/var/log/led.log

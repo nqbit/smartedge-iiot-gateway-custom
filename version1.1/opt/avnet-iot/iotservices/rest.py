@@ -76,14 +76,12 @@ def wificlient_ssid_psk():
     try:
         rsp = 1
         data = request.body.read()
-        # parse ssid/psk and do settings.
         data = json.loads(data)
         for key, value in data.items():
             print(key)
             print(value)
             ssid = key 
             psk = value
-        
         f = open("/etc/wpa_supplicant/wpa_supplicant.conf","w")
         f.write("ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev\n")
         f.write("country=US\n")

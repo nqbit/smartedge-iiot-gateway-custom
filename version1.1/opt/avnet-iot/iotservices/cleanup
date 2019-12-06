@@ -1,7 +1,4 @@
 #!/bin/bash
-sudo chmod 700 /opt/avnet-iot/iotservices/cleanup
-sudo chmod 700 /opt/avnet-iot/iotservices/reboot
-
 sudo rm /opt/avnet-iot/IoTConnect/sample/install*
 sudo rm -R /opt/avnet-iot/IoTConnect/sample/updates
 sudo rm -R /home/avnet/*
@@ -56,7 +53,7 @@ sudo systemctl enable bootservice.service
 sudo rm /sbin/reboot
 sudo ln -s /bin/systemctl /sbin/reboot
 history -c
-#read -p "Press key to continue" key
+read -p "Press key to continue" key
 
 if [ -d /home/avnet ]; then
     echo "Already exists"
@@ -65,7 +62,7 @@ else
     sudo useradd -m -d /home/avnet -g avnet -G root,crontab,adm,tty,dialout,sudo,ssh,iotedge,tss,gpio,i2c -s /bin/bash avnet  
     cat /opt/avnet-iot/iotservices/default.txt | sudo chpasswd 
 fi
-sudo /opt/avnet-iot/iotservices/switch_only
+sudo switch_only
 
 
 

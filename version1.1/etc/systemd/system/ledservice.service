@@ -2,9 +2,10 @@
 Description=Runs smartedge-iiot-gateway Top LED.
 
 [Service]
-Type=forking
-ExecStart=/usr/bin/sudo /opt/avnet-iot/iotservices/led &  
+ExecStart=/usr/bin/sudo /opt/avnet-iot/iotservices/led   
 ExecStop=/usr/bin/sudo echo 0 >/sys/class/leds/green/brightness
+Restart=always
+RestartSec=60
 
 [Install]
 WantedBy=default.target

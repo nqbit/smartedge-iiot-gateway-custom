@@ -2,9 +2,9 @@
 Description=Establishes cellular connectivity
 
 [Service]
-ExecStart=/usr/bin/sudo /opt/avnet-iot/services/quectel-service.sh
+ExecStart=/bin/sh /opt/avnet-iot/services/quectel-service.sh
 Restart=always
-RestartSec=30
+RestartSec=60
 
 [Install]
 WantedBy=default.target

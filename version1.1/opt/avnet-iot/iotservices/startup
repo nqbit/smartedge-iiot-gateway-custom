@@ -7,20 +7,8 @@ else
     echo -e "\e[31mPiShrink Running delaying SDK service"
     exit 1
 fi
-/usr/bin/sudo /opt/avnet-iot/iotservices/stopwd
 cd /opt/avnet-iot/IoTConnect/sample
-/usr/bin/sudo systemctl disable wpa_supplicant.service
-/usr/bin/sudo systemctl enable wpa_supplicant.service
-/usr/bin/sudo systemctl start wpa_supplicant.service
-/usr/bin/sudo systemctl disable restservice
-/usr/bin/sudo systemctl stop ledservice
-/usr/bin/sudo systemctl stop restservice
-sleep 6
-while true; do
-    if ping -q -c 1 -W 1 8.8.8.8 >/dev/null; then
-        /usr/bin/sudo -E python -u /opt/avnet-iot/IoTConnect/sample/example.py 
-    else
-        echo "No network, restarting in 60 seconds" | sudo tee >>/var/log/iot.log
-    fi
-    sleep 60
-done &
+if ping -q -c 1 -W 1 8.8.8.8 >/dev/null; then
+    /usr/bin/sudo -E python -u /opt/avnet-iot/IoTConnect/sample/example.py 
+else
+    echo "No network, restarting in 60 seconds" | sudo tee >>/var/log/iot.log

@@ -1,5 +1,5 @@
 #!/bin/bash
-sleep 1 
+sleep 3 
 sudo rmmod attiny_wdt
-sleep 1 
+sleep 3 
 sudo modprobe attiny_wdt

@@ -2072,8 +2072,7 @@ def SendDataToCloud(name):
     try:
         while(True):
             ledprocess = subprocess.check_output(['systemctl', 'is-active', 'ledservice.service'])
-            if ledprocess == "active":
-            else:
+            if (ledprocess != "active"):
                 if (green == 1):
                     os.system('echo 0 >/sys/class/leds/red/brightness')
                     os.system('echo 1 >/sys/class/leds/green/brightness')

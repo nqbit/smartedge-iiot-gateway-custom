@@ -8,10 +8,7 @@ else
     echo -e "\e[31mPiShrink Running delaying REST API service"
     exit 1
 fi
-/usr/bin/sudo /opt/avnet-iot/iotservices/stopwd
-sleep 1
-while true; do
-     /usr/bin/sudo  -E python -u /opt/avnet-iot/iotservices/rest.py >/dev/null 2>&1
-     sleep 60
-     echo "RestAPI python restart" >>/var/log/rest.log
-done & 
+sudo /opt/avnet-iot/iotservices/stopwd
+sudo  -E python -u /opt/avnet-iot/iotservices/rest.py >/dev/null 2>&1
+echo "RestAPI python restart" >>/var/log/rest.log
+

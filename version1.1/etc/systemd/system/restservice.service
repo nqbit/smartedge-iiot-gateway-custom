@@ -2,8 +2,9 @@
 Description=Runs smartedge-iiot-gateway REST API only enable for factory default.
 
 [Service]
-Type=forking
-ExecStart=/usr/bin/sudo /opt/avnet-iot/iotservices/rest  
+ExecStart=/usr/bin/sudo /opt/avnet-iot/iotservices/rest
+Restart=always
+RestartSec=60
 
 
 [Install]
