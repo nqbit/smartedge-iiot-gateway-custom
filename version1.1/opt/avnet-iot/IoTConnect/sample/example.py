@@ -2132,6 +2132,16 @@ def SendDataToCloud(name):
         myprint(ex)
         myprint("SendDataToCloud Exit")
         
+def Watchdogthread():
+        myprint(cmdline('/opt/avnet-iot/iotservices/startwd'))
+        myprint("Using ATTINY Watchdog pet every 30 seconds")
+        while 1:
+              time.sleep(int(my_config_parser_dict["CloudSystemControl"]["useiotwatchdog"]))
+              myprint(cmdline('echo t | sudo tee /dev/watchdog1'))
+        myprint("Stopping ATTINY Watchdog.")
+        myprint(cmdline('echo V | sudo tee /dev/watchdog1'))
+
+       
 def main(argv):
     global my_config_parser_dict
     global cpId 
@@ -2246,6 +2256,9 @@ def main(argv):
                 myprint("Please add username/password to IoTConnectSDK.conf for RS485 Plug&Play")
 	x = threading.Thread(target=SendDataToCloud, args=("Sending thread",))
         x.start()
+        if (int(my_config_parser_dict["CloudSystemControl"]["useiotwatchdog"]) == 1):
+            x1 = threading.Thread(target=Watchdogthread)
+            x1.start()
         #
         # Connect to cloud and start processing data
         while 1:
