@@ -367,6 +367,14 @@ class SmartSensor:
             return Device.read_float(ss_reg.Register("SENSOR_3_DATA"))
         else:
             return (none)
+
+#    def Sensor_Reset(self, sensor,ResetType, Device):
+#        ENABLE_EXTN_RESET_EVENT_1 = 1 << 10
+#        ENABLE_EXTN_RESET_EVENT_2 = 1 << 11
+#        DEVICE_RESET            = 0x0004
+#        FACTORY_RESET           = 0x0005
+#        POWER_RESET             = 0x0006
+
         
     def Output_Data(self, sensor, value,Device):
         '''
