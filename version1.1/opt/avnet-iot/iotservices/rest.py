@@ -165,6 +165,16 @@ def device_id():
         dev_id = '(unknown)'
     return {'DeviceId': dev_id}
 
+@get('/SDKVersion')
+def sdk_version():
+    
+    try:
+        # Fix to use env var
+        return {'SDKVersion': '1.1'}
+    except:
+        dev_id = '(unknown)'
+    return {'DeviceId': dev_id}
+
 @get('/GetSDKLog')
 def get_sdk_log():
     try:

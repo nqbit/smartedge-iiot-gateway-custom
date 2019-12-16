@@ -35,4 +35,5 @@ sudo modprobe attiny_wdt
 sudo ifconfig eth0 down
 sudo ifconfig eth1 down
 sudo ifconfig wlan0 down
+sudo logout
 sudo halt

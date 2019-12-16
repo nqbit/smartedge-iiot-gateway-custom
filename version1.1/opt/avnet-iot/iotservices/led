@@ -8,6 +8,25 @@ else
     echo -e "\e[31mPiShrink Running delaying LED service"
     exit 1
 fi
+#wait for device
+while [ ! -f /sys/class/leds/green ];
+do
+    sleep 2
+    echo "waiting for green brightness system device"
+done
+# wait for device
+while [ ! -f /sys/class/leds/red ];
+do
+    sleep 2
+    echo "waiting for red brightness system device"
+done
+# wait for device
+while [ ! -f /sys/class/leds/smartedge_led_duty ];
+do
+    sleep 2
+    echo "waiting for smartedge_led_duty system device"
+done
+
 sudo /opt/avnet-iot/iotservices/stopwd
 sudo -E python -u /opt/avnet-iot/iotservices/led.py >/dev/null 2>&1
 echo "Led python restart" >>/var/log/led.log

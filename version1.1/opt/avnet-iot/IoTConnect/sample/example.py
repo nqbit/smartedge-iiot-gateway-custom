@@ -84,12 +84,18 @@ Aquired_Usb = defaultdict(dict)
 sdk = 0
 import pyudev
 
-
+while not os.path.exists("/sys/class/leds/green/brightness"):
+    time.sleep(2)
+    myprint("Waiting for green led")
 os.system('sudo chmod 666 /sys/class/leds/green/brightness')
+os.system('echo 0 >/sys/class/leds/green/brightness')
+    
+while not os.path.exists("/sys/class/leds/red/brightness"):
+    time.sleep(2)
+    myprint("Waiting for green red")
 os.system('sudo chmod 666 /sys/class/leds/red/brightness')
 os.system('echo 0 >/sys/class/leds/red/brightness')
-os.system('echo 0 >/sys/class/leds/green/brightness')
-
+    
 def ctype_async_raise(thread_obj, exception):
     found = False
     target_tid = 0
@@ -2093,7 +2099,7 @@ def SendDataToCloud(name):
     try:
         while(True):
             ledprocess = subprocess.call(['systemctl', 'is-active', 'ledservice.service'])
-            if (ledprocess == 3 ):
+            if (ledprocess == 3):
                 if (green == 1):
                     os.system('echo 0 >/sys/class/leds/red/brightness')
                     os.system('echo 1 >/sys/class/leds/green/brightness')

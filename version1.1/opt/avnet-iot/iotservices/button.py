@@ -77,17 +77,15 @@ def check_switch_factory():
 
 
 if __name__ == '__main__':
-    time.sleep(2)
+    time.sleep(5)
     print("Starting button service")
+
     t = threading.Thread(name='child procs', target=check_switch_long)
     t.start()
     t1 = threading.Thread(name='child procs', target=check_switch_short)
     t1.start()
     t2 = threading.Thread(name='child procs', target=check_switch_factory)
     t2.start()
-    while not os.path.exists("/dev/watchdog1"):
-        time.sleep(1)
-    cmdline('echo V | sudo tee /dev/watchdog1')
     while 1:
         time.sleep(60*60)
     #run(host='0.0.0.0', port=8080)

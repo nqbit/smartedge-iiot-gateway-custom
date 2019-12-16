@@ -7,6 +7,7 @@ else
     echo -e "\e[31mPiShrink Running delaying SDK service"
     exit 1
 fi
+sudo /opt/avnet-iot/iotservices/stopwd
 cd /opt/avnet-iot/IoTConnect/sample
 if ping -q -c 1 -W 1 8.8.8.8 >/dev/null; then
     /usr/bin/sudo -E python -u /opt/avnet-iot/IoTConnect/sample/example.py 

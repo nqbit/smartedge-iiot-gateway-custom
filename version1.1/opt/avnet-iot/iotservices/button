@@ -8,6 +8,25 @@ else
     echo -e "\e[31mPiShrink Running delaying Button service"
     exit 1
 fi
+# wait for device
+while [ ! -f /dev/button ];
+do
+    sleep 2
+    echo "waiting for button device"
+done
+# wait for device
+while [ ! -f /dev/reset ];
+do
+    sleep 2
+    echo "waiting for reset device"
+done
+# wait for device
+while [ ! -f /dev/factoryreset ];
+do
+    sleep 2
+    echo "waiting for factoryreset device"
+done
+
 sudo /opt/avnet-iot/iotservices/stopwd
 sudo -E python -u /opt/avnet-iot/iotservices/button.py >>/var/log/button.log 2>&1 
 echo "Button python restart" >>/var/log/button.log

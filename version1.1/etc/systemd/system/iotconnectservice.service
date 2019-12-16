@@ -2,7 +2,7 @@
 Description=Runs the smartedge-iiot-gateway python IOTCONNECT SDK example
 
 [Service]
-ExecStart=/usr/bin/sudo /opt/avnet-iot/iotservices/startup
+ExecStart=/usr/bin/sudo /opt/avnet-iot/iotservices/iotconnect
 Restart=always
 RestartSec=60
 

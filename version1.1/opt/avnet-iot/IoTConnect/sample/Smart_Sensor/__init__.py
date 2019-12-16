@@ -367,13 +367,58 @@ class SmartSensor:
             return Device.read_float(ss_reg.Register("SENSOR_3_DATA"))
         else:
             return (none)
+        
+    def wait_system_ready(Device, max_wait=3):
+        """
+            Poll sensor until it is ready, optional timeout value
+        :param max_wait: timeout in seconds
+        """
+        wait_time = 0.2
+        while max_wait > 0:
+            try:
+                s = Device.read_register(0xf012)
+                #if Device.device_ready:
+                #    break
+            except:
+                pass
+            time.sleep(wait_time)
+            max_wait -= wait_time
 
-#    def Sensor_Reset(self, sensor,ResetType, Device):
-#        ENABLE_EXTN_RESET_EVENT_1 = 1 << 10
-#        ENABLE_EXTN_RESET_EVENT_2 = 1 << 11
-#        DEVICE_RESET            = 0x0004
-#        FACTORY_RESET           = 0x0005
-#        POWER_RESET             = 0x0006
+        
+    def SoftReset(self, sensor, Device):
+        """
+            Soft Reset the sensor
+        """
+
+         DEVICE_RESET            = 0x0004
+         Device.write_register(0xf013, DEVICE_RESET)
+         Device.wait_system_ready()
+
+    def FactoryReset(self, sensor, Device):
+        """
+            Factory reset the sensor
+        """
+        FACTORY_RESET           = 0x0005
+        Device.write_register(0xf013, FACTORY_RESET)
+        Device.wait_system_ready()
+        
+    def PowerReset(sensor, Device):
+        """
+            Power Reset the sensor
+        """
+
+         POWER_RESET            = 0x0006
+         Device.write_register(0xf013, DEVICE_RESET)
+         Device.wait_system_ready()
+
+    def Sensor_Reset(self, sensor,ResetType, Device):
+        if (ResetType == 0):
+            FactoryReset(sensor, Device)
+        if (ResetType == 1):
+            PowerReset(sensor, Device)
+        if (ResetType == 2):
+            SoftReset(sensor, Device)
+            
 
         
     def Output_Data(self, sensor, value,Device):
