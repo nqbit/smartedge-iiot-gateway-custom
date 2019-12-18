@@ -6,13 +6,6 @@ if [ -z "$1" ]; then
     echo "May specify useoldsdk or importoldsdk (./install.sh useoldsdk)"
 fi
 
-if [ ! -f /usr/local/bin/tpm2_pcrlist ]; then
-    echo "Installing TPM2 components please wait."
-    sudo ./tpm/tpm2_setup.sh
-fi
-# Verify Genuine TPM (Note: only enable for standard RPI dev kits with TPM2 HATS)
-#sudo ./manufacturing.sh 
-# ensure were not going to brick gateway
 
 # put on hold updates in boot/kernel area (Note: Check for buster, jessie, etc.)
 sudo apt-mark hold raspberrypi-bootloader
@@ -138,6 +131,12 @@ sudo apt-mark unhold php
 echo "Rebooting with version 1.1"
 sudo rm /sbin/reboot
 sudo ln -s /bin/systemctl /sbin/reboot
+
+if [ ! -f /usr/local/bin/tpm2_pcrlist ]; then
+    echo "Installing TPM2 components please wait."
+    sudo ./tpm/tpm2_setup.sh
+fi
+
 sudo /opt/avnet-iot/iotservices/cleanup
 
 
