@@ -2092,7 +2092,8 @@ def SendDataToCloud(name):
     global PushDataNow
     global PushDataArray
     global my_config_parser_dict
-    global MessageCount 
+    global MessageCount
+    RefreshBasicToken = 0
     myprint("Sending to cloud Task started")
     green = 1
     count = int(my_config_parser_dict["CloudSystemControl"]["sendtocloudrate"])
@@ -2110,6 +2111,10 @@ def SendDataToCloud(name):
                     green = 1
             time.sleep(float(1))
             #gc.collect()
+            RefreshBasicToken = RefreshBasicToken + 1
+            if (RefreshBasicToken > 12*60*60):
+                AccessOK = GetAccessToken()
+                RefreshBasicToken = 0
             count = count - 1
             if (PushDataNow == 1):
                 SendDataLock.acquire()
