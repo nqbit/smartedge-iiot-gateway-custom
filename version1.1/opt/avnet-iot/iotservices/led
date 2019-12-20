@@ -9,19 +9,19 @@ else
     exit 1
 fi
 #wait for device
-while [ ! -f /sys/class/leds/green ];
+while [ -f /sys/class/leds/green ];
 do
     sleep 2
     echo "waiting for green brightness system device"
 done
 # wait for device
-while [ ! -f /sys/class/leds/red ];
+while [ -f /sys/class/leds/red ];
 do
     sleep 2
     echo "waiting for red brightness system device"
 done
 # wait for device
-while [ ! -f /sys/class/leds/smartedge_led_duty ];
+while [ -f /sys/class/leds/smartedge_led_duty ];
 do
     sleep 2
     echo "waiting for smartedge_led_duty system device"

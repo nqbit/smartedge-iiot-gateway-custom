@@ -1,5 +1,5 @@
 #!/bin/bash
-while [ ! -f /dev/watchdog1 ];
+while [ -f /dev/watchdog1 ];
 do
     sleep 1
     echo 'waiting for watchdog'

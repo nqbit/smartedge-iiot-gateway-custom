@@ -9,19 +9,19 @@ else
     exit 1
 fi
 # wait for device
-while [ ! -f /dev/button ];
+while [ -f /dev/button ];
 do
     sleep 2
     echo "waiting for button device"
 done
 # wait for device
-while [ ! -f /dev/reset ];
+while [ -f /dev/reset ];
 do
     sleep 2
     echo "waiting for reset device"
 done
 # wait for device
-while [ ! -f /dev/factoryreset ];
+while [ -f /dev/factoryreset ];
 do
     sleep 2
     echo "waiting for factoryreset device"
