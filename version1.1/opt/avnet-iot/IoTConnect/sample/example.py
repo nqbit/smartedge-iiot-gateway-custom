@@ -243,7 +243,8 @@ def DoOTACommand(msg):
 	    "st":3,
 	    "msg":"OK"
 	} 
-	sdk.SendACK(11, header)
+	# Disabling until working.
+        #sdk.SendACK(11, header)
       
   
 def callbackMessage(msg):
