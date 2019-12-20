@@ -86,7 +86,15 @@ def check_switch():
                 RedThisTime = 1
                 green_led_off()
                 red_led_on()
-
+        else:
+            if GreeThisTime == 1:
+                GreenThisTime = 0
+                green_led_off()
+            else:
+                GreenThisTime = 1
+                green_led_on()
+                
+                
 def get_ap_mode():
     global ApMode
     active = 0
