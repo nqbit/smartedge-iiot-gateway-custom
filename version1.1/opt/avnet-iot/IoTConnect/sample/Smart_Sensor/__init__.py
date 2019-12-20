@@ -390,16 +390,14 @@ class SmartSensor:
             Soft Reset the sensor
         """
 
-         DEVICE_RESET            = 0x0004
-         Device.write_register(0xf013, DEVICE_RESET)
-         Device.wait_system_ready()
+        Device.write_register(0xf013, 4)
+        Device.wait_system_ready()
 
     def FactoryReset(self, sensor, Device):
         """
             Factory reset the sensor
         """
-        FACTORY_RESET           = 0x0005
-        Device.write_register(0xf013, FACTORY_RESET)
+        Device.write_register(0xf013, 5)
         Device.wait_system_ready()
         
     def PowerReset(sensor, Device):
@@ -407,9 +405,8 @@ class SmartSensor:
             Power Reset the sensor
         """
 
-         POWER_RESET            = 0x0006
-         Device.write_register(0xf013, DEVICE_RESET)
-         Device.wait_system_ready()
+        Device.write_register(0xf013, 6)
+        Device.wait_system_ready()
 
     def Sensor_Reset(self, sensor,ResetType, Device):
         if (ResetType == 0):

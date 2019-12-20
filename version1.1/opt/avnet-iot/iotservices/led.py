@@ -71,11 +71,29 @@ def station_mode():
 def ap_mode():
     return
 
+def get_ap_mode():
+    global ApMode
+    active = 0
+    try:
+	hostapd = subprocess.call(['systemctl', 'is-active', 'hostapd.service'], stdout=None , stderr=None)
+        if hostapd == 0:
+            active = 1
+            ApMode = 1
+        else:
+            ApMode = 0
+    except Exception as ex:
+        print(ex)
+        ApMode = 0
+        active = 0
+    print("AP status" + str(active))
+    return active
+
 def check_switch():
     global GreenThisTime
     global RedThisTime
     while 1:
         global ApMode
+        get_ap_mode()
         time.sleep(1)
 	if ApMode == 1:
             if RedThisTime == 1:
@@ -95,22 +113,6 @@ def check_switch():
                 green_led_on()
                 
                 
-def get_ap_mode():
-    global ApMode
-    active = 0
-    try:
-	hostapd = subprocess.call(['systemctl', 'is-active', 'hostapd.service'], stdout=FNULL, stderr=FNULL)
-        if hostapd == 0:
-            active = 1
-            ApMode = 1
-        else:
-            ApMode = 0
-    except Exception as ex:
-        print(ex)
-        ApMode = 0
-        active = 0
-    print("AP status" + str(active))
-    return active
 
 def check_network_status():
     while 1:

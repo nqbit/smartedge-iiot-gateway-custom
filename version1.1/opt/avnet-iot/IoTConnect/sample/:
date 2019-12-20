@@ -1,4 +1,4 @@
-import traceback
+
 import sys
 import os.path
 import os
@@ -34,7 +34,6 @@ OmegaSSLock = threading.Lock()
 SendDataLock = threading.Lock()
 
 import re
-import subprocess
 from subprocess import PIPE, Popen
 global ThreadCount
 ThreadCount = 0
@@ -84,18 +83,12 @@ Aquired_Usb = defaultdict(dict)
 sdk = 0
 import pyudev
 
-while not os.path.exists("/sys/class/leds/green/brightness"):
-    time.sleep(2)
-    myprint("Waiting for green led")
+
 os.system('sudo chmod 666 /sys/class/leds/green/brightness')
-os.system('echo 0 >/sys/class/leds/green/brightness')
-    
-while not os.path.exists("/sys/class/leds/red/brightness"):
-    time.sleep(2)
-    myprint("Waiting for green red")
 os.system('sudo chmod 666 /sys/class/leds/red/brightness')
 os.system('echo 0 >/sys/class/leds/red/brightness')
-    
+os.system('echo 0 >/sys/class/leds/green/brightness')
+
 def ctype_async_raise(thread_obj, exception):
     found = False
     target_tid = 0
@@ -163,8 +156,6 @@ def service_call(method, url, header=None, body=None):
         conn.close()
         return data
     except Exception as ex:
-        exc_type, exc_value, exc_traceback = sys.exc_info()
-        traceback.print_tb(exc_traceback)
         print(ex)
         sys.stdout.flush()
         sys.stderr.flush()
@@ -243,8 +234,7 @@ def DoOTACommand(msg):
 	    "st":3,
 	    "msg":"OK"
 	} 
-	# Disabling until working.
-        #sdk.SendACK(11, header)
+	sdk.SendACK(11, header)
       
   
 def callbackMessage(msg):
@@ -971,7 +961,7 @@ def ProcessOmegaZWSensorTask(name):
         lastvalue = 0
         value = -1
         pushdataalways = int(my_sensor_dict[name]["pushdataalways"])
-        #myprint("ProcessingZW")
+        myprint("ProcessingZW")
         my_sensor_dict[name]["value"] = lastvalue
 	while 1:
             zwip = my_sensor_dict[name]["OmegaDev"]
@@ -989,6 +979,7 @@ def ProcessOmegaZWSensorTask(name):
                     myprint("Error reading value exiting task " +str(name))
                     sys.exit(1)
                 else:
+                    myprint(value)
                     my_sensor_dict[name]["value"] = value
                     data = {}
                     data[my_sensor_dict[name]["name"]] = value
@@ -1035,18 +1026,12 @@ def ProcessOmegaZWSensorTask(name):
             time.sleep(float(reportpolltime)) 
             
     except Exception as ex:
-        exc_type, exc_value, exc_traceback = sys.exc_info()
-        traceback.print_tb(exc_traceback)
         myprint(ex.message)
         myprint("Omega ZW-REC ExitTask")
     except KeyboardInterrupt as ex:
-        exc_type, exc_value, exc_traceback = sys.exc_info()
-        traceback.print_tb(exc_traceback)
         myprint(ex.message)
         myprint("Omege ZW-REC ExittaskKbd")
     except SystemExit as ex:
-        exc_type, exc_value, exc_traceback = sys.exc_info()
-        traceback.print_tb(exc_traceback)
         myprint("Omega ZW-REC SystemExit")
 
 
@@ -1364,22 +1349,16 @@ def ProcessOmegaSensorTask(name):
     except Exception as ex:
         if (SendDataLock.locked() == True):
            SendDataLock.release()
-        exc_type, exc_value, exc_traceback = sys.exc_info()
-        traceback.print_tb(exc_traceback)
         myprint(ex.message)
         myprint("Omega ExitTask")
     except KeyboardInterrupt as ex:
         if (SendDataLock.locked() == True):
            SendDataLock.release()
-        exc_type, exc_value, exc_traceback = sys.exc_info()
-        traceback.print_tb(exc_traceback)
         myprint(ex.message)
         myprint("Omega ExittaskKbd")
     except SystemExit as ex:
         if (SendDataLock.locked() == True):
            SendDataLock.release()
-        exc_type, exc_value, exc_traceback = sys.exc_info()
-        traceback.print_tb(exc_traceback)
         myprint("Omega SystemExit")
 
     
@@ -1819,32 +1798,6 @@ def SetupDigitalOutputs():
 #
 # Predefined functions for commands.
 #
-
-def EnableRESTApi(args):
-    os.system("sudo systemctl enable restservice")
-    os.system("sudo systemctl start restservice")
-
-def DisableRESTApi(args):
-    os.system("sudo systemctl disable restservice")
-    os.system("sudo systemctl stop restservice")
-
-
-def EnableLedService(args):
-    os.system("sudo systemctl enable ledservice")
-    os.system("sudo systemctl start ledservice")
-
-def DisableLedService(args):
-    os.system("sudo systemctl disable ledservice")
-    os.system("sudo systemctl stop ledservice")
-    
-def EnableButtonService(args):
-    os.system("sudo systemctl enable buttonservice")
-    os.system("sudo systemctl start buttonservice")
-
-def DisableButtonService(args):
-    os.system("sudo systemctl disable buttonservice")
-    os.system("sudo systemctl stop buttonservice")
-
 def EnableSSH(args):
     os.system("sudo systemctl enable ssh")
     os.system("sudo service ssh start")
@@ -1982,7 +1935,8 @@ def FreeDisk():
 
 def SystemHealth():
     global MessageCount
-    result = str("MsgCount= " + str(MessageCount) + " CpuUtil= " + str(CpuUtilization()) + " FreeDsk= " + str(FreeDisk()) + " FreeMem= " + str(FreeMemory()) + " Python thrds= " + str(ProcessMonitor()))
+    #result = str("MsgCount= " + str(MessageCount) + " CpuUtil= " + str(CpuUtilization()) + " FreeDsk= " + str(FreeDisk()) + " FreeMem= " + str(FreeMemory()) + " Python thrds= " + str(ProcessMonitor()))
+    result = str(cmdline('ls -l /var/log'))
     return result
 
 
@@ -2018,12 +1972,8 @@ def ProcessRules(name):
                     else:
                         myprint("Unknown Condition" + condition)
     except Exception as ex:
-        exc_type, exc_value, exc_traceback = sys.exc_info()
-        traceback.print_tb(exc_traceback)
         myprint(ex.message)
     except KeyboardInterrupt:
-        exc_type, exc_value, exc_traceback = sys.exc_info()
-        traceback.print_tb(exc_traceback)
         myprint(ex.message)
 
 
@@ -2100,15 +2050,11 @@ def ProcessSensorTask(name):
     except Exception as ex:
         if (SendDataLock.locked() == True):
            SendDataLock.release()
-        exc_type, exc_value, exc_traceback = sys.exc_info()
-        traceback.print_tb(exc_traceback)
         myprint(ex.message)
         myprint("Exception in ProcessSensorTask")
     except KeyboardInterrupt:
         if (SendDataLock.locked() == True):
            SendDataLock.release()
-        exc_type, exc_value, exc_traceback = sys.exc_info()
-        traceback.print_tb(exc_traceback)
         myprint(ex.message)
         myprint("Exception in ProcessSensorTask")
 
@@ -2119,15 +2065,16 @@ def SendDataToCloud(name):
     global PushDataNow
     global PushDataArray
     global my_config_parser_dict
-    global MessageCount
-    RefreshBasicToken = 0
+    global MessageCount 
     myprint("Sending to cloud Task started")
     green = 1
     count = int(my_config_parser_dict["CloudSystemControl"]["sendtocloudrate"])
     try:
         while(True):
-            ledprocess = subprocess.call(['systemctl', 'is-active', 'ledservice.service'], stdout=None, stderr=None)
-            if (ledprocess == 3):
+            leds = subprocess.check_outpu(['systemctl', 'is-active', 'ledservice'])
+            leds = leds.rstrip()
+            if (leds == "active"):
+            else:
                 if (green == 1):
                     os.system('echo 0 >/sys/class/leds/red/brightness')
                     os.system('echo 1 >/sys/class/leds/green/brightness')
@@ -2138,11 +2085,6 @@ def SendDataToCloud(name):
                     green = 1
             time.sleep(float(1))
             #gc.collect()
-            RefreshBasicToken = RefreshBasicToken + 1
-            if (RefreshBasicToken > int(my_config_parser_dict["CloudSystemControl"]["renewaccesstoken"])):
-                myprint("Refreshing Access Token")
-                AccessOK = GetAccessToken()
-                RefreshBasicToken = 0
             count = count - 1
             if (PushDataNow == 1):
                 SendDataLock.acquire()
@@ -2163,24 +2105,17 @@ def SendDataToCloud(name):
                     sdk.SendData(SendDataArray)
                     SendDataArray = []
                     SendDataLock.release()
-    except Exception as ex:
-        if(SendDataLock.locked() == True):
-           SendDataLock.release()
-        exc_type, exc_value, exc_traceback = sys.exc_info()
-        traceback.print_tb(exc_traceback)
-        myprint(ex)
+    except:
+        SendDataLock.release()
         myprint("SendDataToCloud Exit")
-        
-def Watchdogthread():
-        myprint(cmdline('/opt/avnet-iot/iotservices/startwd'))
-        myprint("Using ATTINY Watchdog pet every 30 seconds")
-        while 1:
-              time.sleep(int(my_config_parser_dict["CloudSystemControl"]["useiotwatchdog"]))
-              myprint(cmdline('echo t | sudo tee /dev/watchdog1'))
-        myprint("Stopping ATTINY Watchdog.")
-        myprint(cmdline('echo V | sudo tee /dev/watchdog1'))
 
-       
+def Watchdogthread():
+        cmdline('/opt/avnet-iot/iotservices/startwd')
+        while 1:
+              time.sleep(30)
+              cmdline('echo t | sudo tee /dev/watchdog1')
+
+        
 def main(argv):
     global my_config_parser_dict
     global cpId 
@@ -2210,8 +2145,19 @@ def main(argv):
         #myprint(my_config_parser_dict)
         
         config.read('/opt/avnet-iot/IoTConnect/sample/IoTConnectSDK.conf')
-        my_config_parser_current_dict = {s:dict(config.items(s)) for s in config.sections()}
-        my_config_parser_dict.update(my_config_parser_current_dict)
+        #myprint(my_config_parser_dict)
+        # 
+        # overlay current conf (usefull for upgrading previous)
+        #
+        for s in config.sections():
+            for i in config.items(s):
+                if my_config_parser_dict[s] in config.keys():
+                    myprint("Section add")
+                #else:
+                #    myprint("Section exists")
+                    
+                                    
+                my_config_parser_dict[s][i[0]] = i[1] 
         
         scopeId = my_config_parser_dict["CloudSDKConfiguration"]["scopeid"]
         env = my_config_parser_dict["CloudSDKConfiguration"]["env"]
@@ -2295,9 +2241,6 @@ def main(argv):
                 myprint("Please add username/password to IoTConnectSDK.conf for RS485 Plug&Play")
 	x = threading.Thread(target=SendDataToCloud, args=("Sending thread",))
         x.start()
-        if (int(my_config_parser_dict["CloudSystemControl"]["useiotwatchdog"]) == 1):
-            x1 = threading.Thread(target=Watchdogthread)
-            x1.start()
         #
         # Connect to cloud and start processing data
         while 1:
@@ -2325,9 +2268,8 @@ def main(argv):
                     while 1:
                        time.sleep(60)
     except Exception as ex:
-        exc_type, exc_value, exc_traceback = sys.exc_info()
-        traceback.print_tb(exc_traceback)
         myprint("Exiting in 60 seconds" + str(ex))
+    cmdline('/opt/avnet-iot/iotservices/stopwd')
     time.sleep(60)
     myprint("Quitting")           
     os.system('sudo rm /tmp/iotconnect.txt')
