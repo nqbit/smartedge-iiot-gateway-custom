@@ -1819,6 +1819,32 @@ def SetupDigitalOutputs():
 #
 # Predefined functions for commands.
 #
+
+def EnableRESTApi(args):
+    os.system("sudo systemctl enable restservice")
+    os.system("sudo systemctl start restservice")
+
+def DisableRESTApi(args):
+    os.system("sudo systemctl disable restservice")
+    os.system("sudo systemctl stop restservice")
+
+
+def EnableLedService(args):
+    os.system("sudo systemctl enable ledservice")
+    os.system("sudo systemctl start ledservice")
+
+def DisableLedService(args):
+    os.system("sudo systemctl disable ledservice")
+    os.system("sudo systemctl stop ledservice")
+    
+def EnableButtonService(args):
+    os.system("sudo systemctl enable buttonservice")
+    os.system("sudo systemctl start buttonservice")
+
+def DisableButtonService(args):
+    os.system("sudo systemctl disable buttonservice")
+    os.system("sudo systemctl stop buttonservice")
+
 def EnableSSH(args):
     os.system("sudo systemctl enable ssh")
     os.system("sudo service ssh start")
@@ -2100,7 +2126,7 @@ def SendDataToCloud(name):
     count = int(my_config_parser_dict["CloudSystemControl"]["sendtocloudrate"])
     try:
         while(True):
-            ledprocess = subprocess.call(['systemctl', 'is-active', 'ledservice.service'])
+            ledprocess = subprocess.call(['systemctl', 'is-active', 'ledservice.service'], stdout=FNULL, stderr=FNULL)
             if (ledprocess == 3):
                 if (green == 1):
                     os.system('echo 0 >/sys/class/leds/red/brightness')
@@ -2113,7 +2139,8 @@ def SendDataToCloud(name):
             time.sleep(float(1))
             #gc.collect()
             RefreshBasicToken = RefreshBasicToken + 1
-            if (RefreshBasicToken > 12*60*60):
+            if (RefreshBasicToken > int(my_config_parser_dict["CloudSystemControl"]["renewaccesstoken")):
+                myprint("Refreshing Access Token")
                 AccessOK = GetAccessToken()
                 RefreshBasicToken = 0
             count = count - 1

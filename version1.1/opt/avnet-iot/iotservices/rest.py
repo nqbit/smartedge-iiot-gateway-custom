@@ -42,7 +42,7 @@ def get_ap_mode():
     global ApMode
     active = 0
     try:
-	hostapd = subprocess.call(['systemctl', 'is-active', 'hostapd.service'])
+	hostapd = subprocess.call(['systemctl', 'is-active', 'hostapd.service'], stdout=FNULL, stderr=FNULL)
         if hostapd == 0:
             active = 1
             ApMode = 1
